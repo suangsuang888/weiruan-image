@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图床工具 - 快速上传图片</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖼️</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1>🖼️ 图床工具</h1>
+            <p class="subtitle">快速上传，一键复制 Markdown 链接</p>
+        </header>
+
+        <!-- 配置区域 -->
+        <section class="config-section">
+            <div class="config-header" onclick="toggleConfig()">
+                <span>⚙️ 配置 GitHub Token</span>
+                <span class="toggle-icon" id="configToggle">▼</span>
+            </div>
+            <div class="config-body" id="configBody">
+                <div class="form-group">
+                    <label for="githubToken">GitHub Personal Access Token</label>
+                    <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx">
+                    <small>需要 repo 权限，<a href="https://github.com/settings/tokens/new" target="_blank">点击获取 Token</a></small>
+                </div>
+                <div class="form-group">
+                    <label for="repoOwner">仓库所有者</label>
+                    <input type="text" id="repoOwner" placeholder="你的 GitHub 用户名">
+                </div>
+                <div class="form-group">
+                    <label for="repoName">仓库名称</label>
+                    <input type="text" id="repoName" placeholder="仓库名称" value="weiruan-image">
+                </div>
+                <div class="form-group">
+                    <label for="branch">分支</label>
+                    <input type="text" id="branch" placeholder="main" value="main">
+                </div>
+                <div class="form-group">
+                    <label for="path">存储路径</label>
+                    <input type="text" id="path" placeholder="images" value="images">
+                </div>
+                <button class="btn btn-primary" onclick="saveConfig()">💾 保存配置</button>
+            </div>
+        </section>
+
+        <!-- 上传区域 -->
+        <section class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📤</div>
+                <p class="upload-text">拖拽图片到这里，或点击选择文件</p>
+                <p class="upload-hint">支持 Ctrl+V 粘贴图片 | 支持 JPG, PNG, GIF, WebP</p>
+                <input type="file" id="fileInput" accept="image/*" multiple hidden>
+            </div>
+            <div class="upload-progress" id="uploadProgress" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-text" id="progressText">上传中...</p>
+            </div>
+        </section>
+
+        <!-- 结果区域 -->
+        <section class="result-section" id="resultSection" style="display: none;">
+            <h2>📋 上传结果</h2>
+            <div class="result-item">
+                <label>Markdown</label>
+                <div class="result-input-group">
+                    <input type="text" id="markdownLink" readonly>
+                    <button class="btn btn-copy" onclick="copyLink('markdownLink')">复制</button>
+                </div>
+            </div>
+            <div class="result-item">
+                <label>HTML</label>
+                <div class="result-input-group">
+                    <input type="text" id="htmlLink" readonly>
+                    <button class="btn btn-copy" onclick="copyLink('htmlLink')">复制</button>
+                </div>
+            </div>
+            <div class="result-item">
+                <label>直接链接</label>
+                <div class="result-input-group">
+                    <input type="text" id="directLink" readonly>
+                    <button class="btn btn-copy" onclick="copyLink('directLink')">复制</button>
+                </div>
+            </div>
+            <div class="result-item">
+                <label>jsDelivr CDN</label>
+                <div class="result-input-group">
+                    <input type="text" id="cdnLink" readonly>
+                    <button class="btn btn-copy" onclick="copyLink('cdnLink')">复制</button>
+                </div>
+            </div>
+            <div class="preview-area">
+                <img id="previewImage" src="" alt="预览">
+            </div>
+        </section>
+
+        <!-- 历史记录 -->
+        <section class="history-section">
+            <div class="history-header">
+                <h2>📜 上传历史</h2>
+                <button class="btn btn-danger btn-small" onclick="clearHistory()">清空历史</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <p class="empty-history">暂无上传记录</p>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>基于 GitHub + jsDelivr CDN 构建 | <a href="https://github.com/weiruankeji2025/weiruan-image" target="_blank">GitHub</a></p>
+        </footer>
+    </div>
+
+    <!-- 提示消息 -->
+    <div class="toast" id="toast"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
